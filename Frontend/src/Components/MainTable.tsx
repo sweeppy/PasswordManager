@@ -11,11 +11,12 @@ import {
   Button,
   Container,
 } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { GetCellsAsync } from "../Requests/GetCellsAsync";
 const MainTable = () => {
-  const [show, setShow] = React.useState(false);
-  const handleClick = () => setShow(!show);
+  const [showPasswords, setShowPasswords] = useState<{
+    [key: string]: boolean;
+  }>({});
   const [cells, setCells] = useState([]);
 
   const handleGetCells = async () => {
@@ -36,6 +37,13 @@ const MainTable = () => {
   useEffect(() => {
     handleGetCells();
   }, []);
+
+  const handleVisibilityClick = (cellId: string) => {
+    setShowPasswords((prevState) => ({
+      ...prevState,
+      [cellId]: !prevState[cellId],
+    }));
+  };
 
   return (
     <TableContainer
@@ -64,7 +72,7 @@ const MainTable = () => {
                   display="flex"
                   flexDirection="row"
                   justifyContent="space-between"
-                  maxWidth="300px"
+                  maxWidth="100%"
                   margin={0}
                 >
                   <Box
@@ -73,22 +81,28 @@ const MainTable = () => {
                     border="2px solid #55AD9B"
                     borderRadius="5px"
                     fontSize="15px"
-                    width="70%"
+                    width="60%"
                   >
-                    {show ? "Password" : "********"}
+                    {showPasswords[cell.cellId]
+                      ? cell.cellPassword
+                      : "********"}
                   </Box>
                   <Tooltip
                     hasArrow
-                    label={show ? "Hide password" : "show password"}
-                    bg={show ? "green.300" : "red.300"}
+                    label={
+                      showPasswords[cell.cellId]
+                        ? "Hide password"
+                        : "Show password"
+                    }
+                    bg={showPasswords[cell.cellId] ? "green.300" : "red.300"}
                   >
                     <Button
                       h="1.75rem"
                       size="sm"
                       width="80px"
-                      onClick={handleClick}
+                      onClick={() => handleVisibilityClick(cell.cellId)}
                     >
-                      {show ? "Hide" : "Show"}
+                      {showPasswords[cell.cellId] ? "Hide" : "Show"}
                     </Button>
                   </Tooltip>
                 </Container>
