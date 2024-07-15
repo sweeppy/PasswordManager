@@ -33,6 +33,11 @@ namespace Backend.Controllers
         {
             try
             {
+                var cells = await _cellRepository.GetCellsAsync();
+                foreach (var cell in cells)
+                {
+                    if (cell.Name == request.Name) return BadRequest("Password for this name already exists.");
+                }
                 await _cellRepository.CreateCell(request);
                 return Ok("Cell was created successfully!");
             }

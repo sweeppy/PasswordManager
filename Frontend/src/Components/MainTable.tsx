@@ -13,7 +13,12 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { GetCellsAsync } from "../Requests/GetCellsAsync";
-const MainTable = () => {
+import { format } from "date-fns";
+
+interface SearchText {
+  searchTerm: string;
+}
+const MainTable = ({ searchTerm }: SearchText) => {
   const [showPasswords, setShowPasswords] = useState<{
     [key: string]: boolean;
   }>({});
@@ -34,9 +39,13 @@ const MainTable = () => {
       console.error(error.response.data);
     }
   };
+
   useEffect(() => {
     handleGetCells();
   }, []);
+  const filteredCells = cells.filter((cell: any) =>
+    cell.cellName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const handleVisibilityClick = (cellId: string) => {
     setShowPasswords((prevState) => ({
@@ -51,6 +60,8 @@ const MainTable = () => {
       borderColor="#55AD9B"
       margin="5px"
       borderRadius="10px"
+      maxHeight="600px"
+      overflowY="auto"
     >
       <Table variant="striped" colorScheme="teal" size="lg">
         <Thead>
@@ -63,7 +74,7 @@ const MainTable = () => {
           </Tr>
         </Thead>
         <Tbody>
-          {cells.map((cell: any) => (
+          {filteredCells.map((cell: any) => (
             <Tr key={cell.cellId}>
               <Td>{cell.cellName}</Td>
               <Td>
@@ -107,7 +118,9 @@ const MainTable = () => {
                   </Tooltip>
                 </Container>
               </Td>
-              <Td isNumeric>{cell.createdAt}</Td>
+              <Td isNumeric>
+                {format(new Date(cell.createdAt), "yyyy-mm-dd HH:mm")}
+              </Td>
             </Tr>
           ))}
         </Tbody>
