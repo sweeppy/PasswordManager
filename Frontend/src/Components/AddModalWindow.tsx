@@ -27,9 +27,10 @@ import { CreateCellAsync } from "../Requests/CreateCellAsync";
 interface CellModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onAddCell: () => void;
 }
 
-const AddCellModal = ({ isOpen, onClose }: CellModalProps) => {
+const AddCellModal = ({ isOpen, onClose, onAddCell }: CellModalProps) => {
   const [socialSelected, setSocialSelected] = useState("website");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
@@ -78,6 +79,7 @@ const AddCellModal = ({ isOpen, onClose }: CellModalProps) => {
         setAlertText(responseData);
       } else {
         onClose();
+        onAddCell();
         setName("");
         setPassword("");
       }

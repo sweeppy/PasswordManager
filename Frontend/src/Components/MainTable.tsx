@@ -18,7 +18,10 @@ import { format } from "date-fns";
 interface SearchText {
   searchTerm: string;
 }
-const MainTable = ({ searchTerm }: SearchText) => {
+interface UpdateTable {
+  key: string;
+}
+const MainTable = ({ searchTerm }: SearchText, { key }: UpdateTable) => {
   const [showPasswords, setShowPasswords] = useState<{
     [key: string]: boolean;
   }>({});
@@ -42,7 +45,7 @@ const MainTable = ({ searchTerm }: SearchText) => {
 
   useEffect(() => {
     handleGetCells();
-  }, []);
+  }, [key]);
   const filteredCells = cells.filter((cell: any) =>
     cell.cellName.toLowerCase().includes(searchTerm.toLowerCase())
   );

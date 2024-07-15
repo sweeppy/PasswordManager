@@ -28,6 +28,11 @@ function App() {
     setSearchTerm(event.target.value);
   };
 
+  const [updateTable, setUpdateTable] = useState(false);
+  const handleAddCell = () => {
+    setUpdateTable((prev) => !prev);
+  };
+
   return (
     <ChakraProvider>
       <InputGroup marginTop={30} marginBottom={30} className="main-input">
@@ -41,7 +46,10 @@ function App() {
           onChange={handleSearchChange}
         />
       </InputGroup>
-      <MainTable searchTerm={searchTerm} />
+      <MainTable
+        key={updateTable ? "update" : "no-update"}
+        searchTerm={searchTerm}
+      />
       <Button
         position="absolute"
         bottom="50px"
@@ -50,7 +58,11 @@ function App() {
       >
         <AddIcon />
       </Button>
-      <AddCellModal isOpen={showModalAdd} onClose={handleCloseModalAdd} />
+      <AddCellModal
+        onAddCell={handleAddCell}
+        isOpen={showModalAdd}
+        onClose={handleCloseModalAdd}
+      />
     </ChakraProvider>
   );
 }
